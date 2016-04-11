@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 import hexchat
 import os
+import subprocess
 from threading import Thread
 
 __module_name__ = "Blinking Razer Keyboard"
@@ -47,7 +49,7 @@ class RazerAlert():
         return hexchat.EAT_ALL
 
     def handle_stop_blinking(self):
-        print "Do the stop"  # TODO: Here we stop the blinking
+        subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'normal'])
 
     def handle_start_blinking(self):
         if hexchat.get_prefs('away_omit_alerts') and hexchat.get_info('away'):
@@ -62,7 +64,7 @@ class RazerAlert():
         if not active:
             return False
 
-        print "Do the thing"  # TODO: Here we do the blinking
+        subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'blink'])
 
     def start_blinking(self, word, word_eol, userdata):
         do_thread = Thread(target=self.handle_start_blinking)
