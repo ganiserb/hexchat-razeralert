@@ -9,7 +9,5 @@ profiles = razer.profiles.ChromaProfiles(daemon)
 
 action = sys.argv[1]
 
-if action == 'blink':
-    daemon.set_effect('wave', 1)
-elif action == 'normal':
-    profiles.activate_profile_from_file('gabriel')
+if action:
+    profiles.activate_profile_from_file(action)

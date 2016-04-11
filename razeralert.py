@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import hexchat
 import os
+import time
 import subprocess
 from threading import Thread
 
@@ -14,7 +15,6 @@ __module_description__ = "Whenever an alert is triggered a command is issued to"
                          "by NoiSek."
 
 # TODO: rename commands and change descriptions
-#       call the right commands
 
 class RazerAlert():
     def __init__(self):
@@ -25,6 +25,8 @@ class RazerAlert():
 
         if not hexchat.get_pluginpref("razeralert_active"):
             hexchat.prnt("Alerts are currently disabled. Re-enable them with /alertson")
+
+        self.blink = False
 
     def disable(self, word, word_eol, userdata):
         hexchat.prnt("Sound alerts will now be off until you enable them again with /alertson.")
@@ -49,7 +51,7 @@ class RazerAlert():
         return hexchat.EAT_ALL
 
     def handle_stop_blinking(self):
-        subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'normal'])
+        subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'gabriel'])
 
     def handle_start_blinking(self):
         if hexchat.get_prefs('away_omit_alerts') and hexchat.get_info('away'):
@@ -64,13 +66,19 @@ class RazerAlert():
         if not active:
             return False
 
-        subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'blink'])
+        while self.blink:
+            subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'black'])
+            time.sleep(.5)
+            subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'gabriel'])
+            time.sleep(.5)
 
     def start_blinking(self, word, word_eol, userdata):
+        self.blink = True
         do_thread = Thread(target=self.handle_start_blinking)
         do_thread.start()
 
     def stop_blinking(self, word, word_eol, userdata):
+        self.blink = False
         do_thread = Thread(target=self.handle_stop_blinking)
         do_thread.start()
 
