@@ -68,9 +68,9 @@ class RazerAlert():
 
         while self.blink:
             subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'black'])
-            time.sleep(.5)
+            time.sleep(.25)
             subprocess.call(['/home/gabriel/dev/hexchat-razeralert/keyboard_controller.py', 'gabriel'])
-            time.sleep(.5)
+            time.sleep(.25)
 
     def start_blinking(self, word, word_eol, userdata):
         self.blink = True
